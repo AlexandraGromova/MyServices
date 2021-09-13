@@ -11,6 +11,7 @@ import android.widget.Button
 import java.util.*
 
 private const val LOG_TAG = "myActivity"
+const val NAME = "isDisabled"
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         val startBtn = findViewById<Button>(R.id.start_button)
         val stopBtn = findViewById<Button>(R.id.stop_button)
         intentService = Intent(this, MyService::class.java)
+
         sConn = object : ServiceConnection {
             override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
                 Log.d(LOG_TAG, "MainActivity onServiceConnected")
@@ -42,7 +44,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private fun onClickStart(){ startService(intentService)}
     private fun onClickStop(){
         Log.d(LOG_TAG, "onClickStop")
-        stopService(intentService)
+        startService(Intent(this, MyService::class.java).apply {
+            putExtra(NAME, true)
+        })
+
     }
     fun onClickBind(){ bindService(intentService, sConn!!, BIND_AUTO_CREATE)}
     private fun onClickUnBind(){
